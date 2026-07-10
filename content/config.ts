@@ -30,12 +30,6 @@ export type Wish = {
   emoji: string;
 };
 
-export type Song = {
-  src: string;
-  title: string;
-  credit?: string;
-};
-
 export type Balloon = {
   message: string;
   color: string;
@@ -44,100 +38,121 @@ export type Balloon = {
 // ── The star of the show ──
 const name = "Mary Amelda Animata Sannoh";
 
-// ── Photo gallery (placeholders — add `src` to use real photos) ──
+// ── Photo gallery (real photos live in public/images/; edit captions freely) ──
 const photos: Photo[] = [
   {
-    alt: "A favorite memory together",
+    src: "/images/birthday1.jpeg",
+    alt: "A favorite photo of Amelda",
     emoji: "📸",
     gradient: "from-rose-400/50 to-amber-300/40",
-    caption: "That day we couldn't stop laughing",
+    caption: "The smile that lights up every room",
   },
   {
-    alt: "Celebrating together",
+    src: "/images/birthday2.jpeg",
+    alt: "Amelda celebrating",
     emoji: "🥳",
     gradient: "from-amber-400/50 to-pink-400/40",
-    caption: "Celebration mode: always on",
+    caption: "Pure joy, captured",
   },
   {
-    alt: "An adventure we shared",
+    src: "/images/birthday3.jpeg",
+    alt: "Amelda in golden light",
     emoji: "🌅",
     gradient: "from-pink-500/40 to-orange-300/40",
-    caption: "Chasing sunsets",
+    caption: "Golden hour, golden girl",
   },
   {
-    alt: "A quiet happy moment",
+    src: "/images/birthday4.jpeg",
+    alt: "A quiet, happy moment of Amelda",
     emoji: "☕",
     gradient: "from-orange-300/40 to-rose-400/40",
-    caption: "The little moments",
+    caption: "Soft, happy, and glowing",
   },
   {
-    alt: "Dancing the night away",
+    src: "/images/birthday5.jpeg",
+    alt: "Amelda shining",
     emoji: "💃",
     gradient: "from-fuchsia-400/40 to-amber-300/40",
-    caption: "Dance floor royalty",
+    caption: "Born to shine",
   },
   {
-    alt: "Friends forever",
+    src: "/images/birthday6.jpeg",
+    alt: "Amelda, radiant as always",
     emoji: "🫶",
     gradient: "from-amber-300/50 to-rose-500/40",
-    caption: "Forever kind of friends",
+    caption: "Effortlessly radiant",
+  },
+  {
+    src: "/images/birthday7.jpeg",
+    alt: "Amelda — here's to 23",
+    emoji: "🎂",
+    gradient: "from-rose-500/40 to-amber-400/40",
+    caption: "Here's to 23 💛",
   },
 ];
 
-// ── Videos (placeholders — add `src` to use real videos) ──
+// ── Videos (real clips live in public/videos/; edit titles freely) ──
 const videos: Video[] = [
   {
-    title: "A message from everyone who loves you",
+    src: "/videos/video1.mp4",
+    title: "Amelda, being unforgettable",
     emoji: "🎬",
     gradient: "from-rose-500/40 to-amber-400/40",
   },
   {
-    title: "The highlight reel of your year",
+    src: "/videos/video2.mp4",
+    title: "The highlight reel of you",
     emoji: "✨",
     gradient: "from-amber-400/40 to-fuchsia-400/30",
+  },
+  {
+    src: "/videos/video3.mp4",
+    title: "One more of you being you 💛",
+    emoji: "💛",
+    gradient: "from-fuchsia-400/40 to-rose-500/40",
   },
 ];
 
 // ── Guest wishes wall ──
 const wishes: Wish[] = [
+  // {
+  //   from: "",
+  //   message:
+  //     "From your first breath you've been my greatest gift. Watching you become who you are is the joy of my life.",
+  //   emoji: "💝",
+  // },
   {
-    from: "Mom",
-    message:
-      "From your first breath you've been my greatest gift. Watching you become who you are is the joy of my life.",
-    emoji: "💝",
-  },
-  {
-    from: "Alex",
+    from: "Swaray",
     message:
       "Happy birthday to the friend who shows up — every single time. You make everyone around you braver.",
     emoji: "🎈",
   },
   {
-    from: "Jordan",
+    from: "Walon",
     message:
       "Another year of you being effortlessly amazing. Save me a slice of cake!",
     emoji: "🍰",
   },
   {
-    from: "Nana",
+    from: "Haffy",
     message:
       "My darling, may your year be as sweet as you've made all of mine.",
     emoji: "🌹",
   },
   {
-    from: "Sam",
+    from: "Conrad",
     message:
       "You laughed with me when things were good and sat with me when they weren't. Happiest of birthdays.",
     emoji: "🫂",
   },
   {
-    from: "Riley",
+    from: "Zainab",
     message:
       "To the person with the biggest heart I know — today the universe celebrates YOU.",
     emoji: "🌟",
   },
   {
-    from: "Taylor",
+    from: "Hawa",
     message:
       "Cheers to you! May your candles burn bright and your wishes all come true.",
     emoji: "🥂",
@@ -155,20 +170,19 @@ export const config = {
   introText: "Tap to open your surprise",
 
   // ── Poem ──
-  poemTitle: "A Few Words From the Heart",
+  poemTitle: "A Few Words From Us the friends",
   poemLines: [
-    "Some people walk into your life",
-    "and quietly turn the lights on.",
-    "You are laughter in the hard weeks,",
-    "the warm hand when the road gets long.",
-    "Every room is softer when you're in it,",
-    "every story better when you tell it.",
-    "So today, for once, let us hold the light —",
-    "and shine it all on you.",
-    "May this year hand you every dream",
-    "you were too humble to ask for.",
-    "Happy birthday, beautiful soul.",
-    "The best is still ahead. 💛",
+    "You arrived without an announcement.",
+    "No grand entrance. No promise that you'd stay.",
+    "Just a quiet presence that settled into the empty spaces of my life,",
+    "as though you had always known where the silence hurts the most.",
+    "You never asked for the pieces of me that were broken —",
+    "you simply held conversations with the part of me",
+    "I thought no one would understand.",
+    "People often say that friends are the family we choose.",
+    "But I didn't choose you. Life did.",
+    "And perhaps, for the first time in a long while,",
+    "life was unbelievably kind to my gentle heart.",
   ],
 
   // ── Section titles ──
@@ -188,38 +202,9 @@ export const config = {
   relightLabel: "Relight the candles",
   candleCount: 5,
 
-  // ── Music playlist (all files live in public/audio/) ──
-  songs: [
-    {
-      src: "/audio/birthday-song.mp3",
-      title: "Happy Birthday to You (instrumental)",
-      // Public domain — Pracchia-78, Wikimedia Commons
-    },
-    {
-      src: "/audio/happy-birthday-vocal.mp3",
-      title: "Happy Birthday to You (sung)",
-      // CC-BY-SA 3.0 — Alexander Stephens / Hanns Christian Müller, Wikimedia Commons
-      credit: "Alexander Stephens, CC-BY-SA 3.0, via Wikimedia Commons",
-    },
-    {
-      src: "/audio/happy-birthday-jazz-trio.mp3",
-      title: "Happy Birthday (jazz trio)",
-      // CC0 — vole.wtf/happy-birthday
-    },
-    {
-      src: "/audio/happy-birthday-orchestral.mp3",
-      title: "Happy Birthday (orchestral)",
-      // CC0 — vole.wtf/happy-birthday
-    },
-    {
-      src: "/audio/happy-birthday-acoustic-guitar.mp3",
-      title: "Happy Birthday (acoustic guitar)",
-      // CC0 — vole.wtf/happy-birthday
-    },
-  ] as Song[],
-
   // ── Her birth date (EDIT ME — used for the "birthday in numbers" stats) ──
-  birthDate: "1998-07-09",
+  // Turning 23 on 2026-07-11.
+  birthDate: "2003-07-11",
 
   // ── Pop-the-balloons (each balloon hides a message) ──
   balloonsTitle: "Pop a Balloon",
@@ -269,10 +254,23 @@ export const config = {
     "— Everyone who loves you",
   ],
 
+  // ── Countdown (counts down to her birthday; celebrates on the day) ──
+  countdownLabel: `Until ${name.split(" ")[1]} turns ${
+    new Date().getFullYear() - new Date("2003-07-11").getFullYear()
+  }`,
+  countdownCelebrate: `🎉 It's your birthday, ${name.split(" ")[1]}! 🎉`,
+
+  // ── Easter egg (tap her name 5× to unlock) ──
+  secretMessage:
+    "You found the secret 💛 — of everyone who's ever been celebrated here, none deserved it more than you.",
+
+  // ── Closing starfield ──
+  starfieldTagline: "Forever one of our brightest stars ✨",
+
   // ── Footer ──
   footerText: "Made with love, just for you 💛",
 
   // ── Hosting (EDIT ME once deployed — used for sitemap, robots, and
   //    social-share previews) ──
-  siteUrl: "https://birthday.example.com",
+  siteUrl: "https://birthday.walonfoundation.com",
 };
