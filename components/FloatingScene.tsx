@@ -263,10 +263,24 @@ export default function FloatingScene() {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
+  // The scene is a hero-area ambiance. Once scrolled well past it, freeze the
+  // render loop entirely — no GPU work while reading the rest of the page.
+  const [paused, setPaused] = useState(false);
+  useEffect(() => {
+    const onScroll = () => {
+      const past = window.scrollY > window.innerHeight * 1.3;
+      setPaused((p) => (p === past ? p : past));
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   // Phones use center-hugging placements (see MOBILE_ITEMS) so nothing drifts
   // off the narrow horizontal frustum.
   const items = isNarrow ? MOBILE_ITEMS : ITEMS;
   const animate = !reduced;
+  const running = animate && !paused;
 
   return (
     <div
@@ -275,11 +289,17 @@ export default function FloatingScene() {
     >
       <Canvas
         camera={{ position: [0, 0, 9], fov: 50 }}
-        dpr={[1, 1.5]}
-        gl={{ alpha: true, antialias: true }}
-        // "demand" only advances on invalidation, so reduced-motion users get a
-        // single static frame instead of a running render loop.
-        frameloop={animate ? "always" : "demand"}
+        // 1× / no antialias on phones — full device-pixel supersampling is the
+        // main WebGL cost on mobile GPUs.
+        dpr={isNarrow ? 1 : [1, 1.5]}
+        gl={{
+          alpha: true,
+          antialias: !isNarrow,
+          powerPreference: "low-power",
+        }}
+        // "always" only while the scene is on-screen; "demand" freezes it (a
+        // single static frame) for reduced-motion or once scrolled past.
+        frameloop={running ? "always" : "demand"}
       >
         <Scene items={items} animate={animate} />
       </Canvas>
