@@ -2,7 +2,7 @@
 
 import { AnimatePresence } from "motion/react";
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BackgroundJourney from "@/components/BackgroundJourney";
 import BalloonPop from "@/components/BalloonPop";
 import BirthdayCountdown from "@/components/BirthdayCountdown";
@@ -27,12 +27,26 @@ import { fireRevealBurst } from "@/lib/confetti";
 
 // WebGL ambient layer — client-only (needs the browser) and lazy so it never
 // blocks first paint. ssr:false is allowed here because this is a Client Component.
+// It's only rendered on desktop (see below), so the heavy three.js chunk is
+// never even downloaded on phones.
 const FloatingScene = dynamic(() => import("@/components/FloatingScene"), {
   ssr: false,
 });
 
 export default function BirthdayExperience() {
   const [opened, setOpened] = useState(false);
+
+  // The 3D scene is desktop-only — WebGL is the main cost on phones, and the CSS
+  // floating elements already provide ambient motion there. All other animations
+  // stay on every device.
+  const [isDesktop, setIsDesktop] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    const update = () => setIsDesktop(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
 
   const open = () => {
     fireRevealBurst();
@@ -48,7 +62,7 @@ export default function BirthdayExperience() {
       {opened && (
         <>
           <BackgroundJourney />
-          <FloatingScene />
+          {isDesktop && <FloatingScene />}
           <FloatingElements />
           <CursorSparkles />
           <DelightLayer />
