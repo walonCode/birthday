@@ -9,10 +9,12 @@ function Counter({
   target,
   label,
   emoji,
+  highlight = false,
 }: {
   target: number;
   label: string;
   emoji: string;
+  highlight?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
@@ -40,12 +42,22 @@ function Counter({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.6 }}
-      className="flex flex-col items-center gap-2 rounded-2xl border border-gold/25 bg-cream/5 p-6 text-center backdrop-blur-sm"
+      className={`flex flex-col items-center gap-2 rounded-2xl p-6 text-center backdrop-blur-sm ${
+        highlight
+          ? "gradient-border border border-gold/40 bg-gold/10 shadow-[0_0_35px_rgba(212,162,78,0.35)]"
+          : "border border-gold/25 bg-cream/5"
+      }`}
     >
       <span aria-hidden="true" className="text-3xl">
         {emoji}
       </span>
-      <span className="font-serif text-3xl text-gold-light tabular-nums md:text-4xl">
+      <span
+        className={`font-serif tabular-nums ${
+          highlight
+            ? "text-shimmer text-5xl md:text-6xl"
+            : "text-3xl text-gold-light md:text-4xl"
+        }`}
+      >
         {value.toLocaleString()}
       </span>
       <span className="text-cream/70 text-sm">{label}</span>
@@ -56,7 +68,13 @@ function Counter({
 export default function BirthdayStats() {
   // Computed client-side so the numbers are current on the day it's viewed
   const [stats, setStats] = useState<
-    { target: number; label: string; emoji: string }[] | null
+    | {
+        target: number;
+        label: string;
+        emoji: string;
+        highlight?: boolean;
+      }[]
+    | null
   >(null);
 
   useEffect(() => {
@@ -66,8 +84,9 @@ export default function BirthdayStats() {
     setStats([
       {
         target: Math.floor(days / 365.25),
-        label: "trips around the sun",
+        label: "trips around the sun 🎉",
         emoji: "🌞",
+        highlight: true,
       },
       { target: days, label: "days of making the world brighter", emoji: "🌍" },
       {

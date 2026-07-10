@@ -1,7 +1,41 @@
 "use client";
 
-import { motion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { useEffect, useRef, useState } from "react";
 import { config } from "@/content/config";
+import { fireHeartStorm } from "@/lib/confetti";
+
+// The birthday number being celebrated (turns 23 in 2026 → born 2003).
+const TURNING_AGE =
+  new Date().getFullYear() - new Date(config.birthDate).getFullYear();
+
+function ordinal(n: number) {
+  const s = ["th", "st", "nd", "rd"];
+  const v = n % 100;
+  return `${n}${s[(v - 20) % 10] ?? s[v] ?? s[0]}`;
+}
+
+/** Counts from 0 up to `to` once, easing out. Honors reduced motion. */
+function CountUp({ to }: { to: number }) {
+  const reduced = useReducedMotion();
+  const [value, setValue] = useState(reduced ? to : 0);
+
+  useEffect(() => {
+    if (reduced) return;
+    const duration = 1600;
+    const startAt = performance.now() + 900; // let the name land first
+    let frame: number;
+    const tick = (now: number) => {
+      const t = Math.min(1, Math.max(0, (now - startAt) / duration));
+      setValue(Math.round(to * (1 - (1 - t) ** 3)));
+      if (t < 1) frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [to, reduced]);
+
+  return <span className="tabular-nums">{value}</span>;
+}
 
 const container = {
   hidden: {},
@@ -18,6 +52,26 @@ const item = {
 };
 
 export default function Hero() {
+  const [secret, setSecret] = useState(false);
+  const taps = useRef(0);
+
+  // Easter egg: tap her name five times to reveal a hidden note.
+  const onNameTap = () => {
+    taps.current += 1;
+    if (taps.current >= 5) {
+      taps.current = 0;
+      setSecret(true);
+      fireHeartStorm();
+    }
+  };
+
+  // Auto-dismiss the secret after a few seconds.
+  useEffect(() => {
+    if (!secret) return;
+    const id = window.setTimeout(() => setSecret(false), 6500);
+    return () => window.clearTimeout(id);
+  }, [secret]);
+
   return (
     <section className="relative flex min-h-svh flex-col items-center justify-center overflow-hidden px-6 text-center">
       {/* Glow blobs */}
@@ -81,6 +135,23 @@ export default function Hero() {
           ))}
         </motion.h1>
 
+        <motion.div
+          variants={item}
+          className="mt-7 flex items-center gap-3 rounded-full border border-gold/40 bg-plum-light/50 px-6 py-2.5 backdrop-blur-sm"
+        >
+          <span aria-hidden="true" className="text-2xl md:text-3xl">
+            🎂
+          </span>
+          <span className="font-serif text-lg text-cream/90 md:text-2xl">
+            Happy{" "}
+            <span className="text-shimmer font-semibold">
+              <CountUp to={TURNING_AGE} />
+              {ordinal(TURNING_AGE).replace(String(TURNING_AGE), "")}
+            </span>{" "}
+            Birthday
+          </span>
+        </motion.div>
+
         <motion.p
           variants={item}
           className="mt-6 max-w-xl font-serif text-lg italic text-cream/85 md:text-2xl text-pretty"
@@ -90,11 +161,36 @@ export default function Hero() {
 
         <motion.p
           variants={item}
-          className="mt-4 text-sm tracking-widest text-gold-light/70 md:text-base"
+          onClick={onNameTap}
+          className="mt-4 cursor-default select-none text-sm tracking-widest text-gold-light/70 md:text-base"
         >
           {config.name}
         </motion.p>
       </motion.div>
+
+      {/* Easter-egg reveal */}
+      <AnimatePresence>
+        {secret && (
+          <motion.div
+            key="secret"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSecret(false)}
+            className="fixed inset-0 z-[60] flex cursor-pointer items-center justify-center bg-plum/92 p-6 backdrop-blur-sm"
+          >
+            <motion.p
+              initial={{ scale: 0.8, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 150, damping: 15 }}
+              className="max-w-lg text-center font-serif text-2xl text-cream italic md:text-3xl"
+            >
+              {config.secretMessage}
+            </motion.p>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Scroll cue */}
       <motion.div
